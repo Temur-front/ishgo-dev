@@ -1,66 +1,62 @@
+"use client";
+
+import { Salaries } from "@/TS/consts";
+import SearchInput from "@/components/inputs";
+import { Sidebar } from "@/components/layout";
+import { SelectComponent } from "@/components/selects";
+import { Statuses } from "@/components/statuses";
 import { JobDescriptionTabs } from "@/components/tabs";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import filter from "@/public/icons/filter.png";
-import ishgo_logo from "@/public/icons/ishgo-logo.png";
-import search from "@/public/icons/search.png";
-import building1 from "@/public/icons/sidebar/building-2.png";
-import component from "@/public/icons/sidebar/component.png";
-import users from "@/public/icons/sidebar/users.png";
 import amazon from "@/public/images/amazon.png";
 import elit from "@/public/images/elit.png";
 import Icons from "@/public/svg";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Home() {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   return (
     <div className="h-screen bg-[#FCFCFC] p-4">
       <div className="flex h-full gap-4">
-        {/* Sidebar */}
-        <div className="w-[340px] h-full bg-slate-100 p-4 shadow-main rounded-main">
-          <Image className="pb-3" src={ishgo_logo} alt="" />
-          <ul className="">
-            <li className="flex items-center gap-2 bg-active text-white px-3 py-4 rounded-main">
-              <Image src={users} alt="" />
-              Vacancies
-            </li>
-            <li className="flex items-center gap-2 px-3 py-4 rounded-main cursor-pointer">
-              <Image src={component} alt="" />
-              Component
-            </li>
-            <li className="flex items-center gap-2 px-3 py-4 rounded-main cursor-pointer">
-              <Image src={building1} alt="" />
-              Industries
-            </li>
-          </ul>
-        </div>
+        <Sidebar />
         <div className="flex-1 flex gap-4">
           {/* Vacancies list */}
           <div className="flex-1 h-full p-4 shadow-main bg-white rounded-main">
-            <div className="flex items-center gap-3">
-              <div className="relative flex-grow">
-                <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
-                  <Image src={search} alt="" />
+            <Collapsible open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+              <div className="flex items-center gap-3">
+                <SearchInput />
+                <div>
+                  <CollapsibleTrigger asChild>
+                    <Button className="w-11 h-11 flex-shrink-0 p-0 shadow-main border border-gray-200 flex justify-center items-center rounded-main bg-white">
+                      <Image src={filter} alt="" />
+                    </Button>
+                  </CollapsibleTrigger>
                 </div>
-                <Input
-                  id="search"
-                  placeholder="Search..."
-                  className="pl-9 h-11 focus-visible:outline-none placeholder:text-gray-200 shadow-main" // Adds padding to prevent text overlap with the icon
-                />
+                <Button className="h-11 w-[120px] flex-shrink-0 text-sm font-semibold bg-black text-green-500 border-gray-200">
+                  Search
+                </Button>
               </div>
-              <Button className="w-11 h-11 flex-shrink-0 p-0 shadow-main border border-gray-200 flex justify-center items-center rounded-main bg-white">
-                <Image src={filter} alt="" />
-              </Button>
-              <Button className="h-11 w-[120px] flex-shrink-0 text-sm font-semibold bg-black text-green-500 border-gray-200">
-                Search
-              </Button>
-            </div>
+              <CollapsibleContent className="flex gap-3 mt-4">
+                <SelectComponent options={Salaries} placeholder="Salary" />
+                <SelectComponent options={Salaries} placeholder="Job type" />
+                <SelectComponent options={Salaries} placeholder="Location" />
+                <SelectComponent options={Salaries} placeholder="Order by" />
+              </CollapsibleContent>
+            </Collapsible>
 
-            <div className="mt-4">
-              <span className="h-[38px] inline-flex justify-center items-center px-3 rounded-main bg-slate-100 text-slate-500">
-                Administrative, Business and Management
-              </span>
-            </div>
+            {!isFilterOpen && (
+              <div>
+                <span className="h-[38px] inline-flex justify-center items-center px-3 rounded-main bg-slate-100 text-slate-500">
+                  Administrative, Business and Management
+                </span>
+              </div>
+            )}
 
             {[1, 2, 3, 4, 5].map((num) => (
               <div key={num} className="mt-4 shadow-main">
@@ -98,7 +94,7 @@ export default function Home() {
           </div>
 
           {/* Vacancy Info */}
-          <div className="flex-1 h-full p-4 shadow-main bg-white rounded-main">
+          <div className="flex-1 h-full flex flex-col justify-between p-4 shadow-main bg-white rounded-main relative">
             <div className="flex border-b border-gray-100 pb-2.5">
               <div>
                 <Image
@@ -129,14 +125,14 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            <div className="mt-6">
+            <div className="flex-grow mt-6">
               <div className="flex justify-between items-center pb-2">
                 <h1 className="text-xl font-semibold">Category Manager</h1>
                 <Statuses status="new" />
               </div>
               <div className="flex items-center gap-2">
                 <Icons.Calendar className="flex-none" />
-                <span className="text-orange-main">Deadline 16.09.2024</span>
+                <span className="text-orange-main ">Deadline 16.09.2024</span>
                 <span className="ml-4 text-hashtag underline font-medium">
                   #Administrative,Business and Management
                 </span>
@@ -145,22 +141,18 @@ export default function Home() {
                 <JobDescriptionTabs />
               </div>
             </div>
+            <div className="flex justify-between items-center w-full">
+              <div className="flex gap-5">
+                <Statuses status="print" />
+                <Statuses status="complain" />
+              </div>
+              <Button className="bg-green-sec text-black hover:text-white w-[140px] h-[42px]">
+                Apply
+              </Button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-const Statuses = ({ status = "new" }: { status: "new" }) => {
-  return status === "new" ? (
-    <div className="flex items-center text-xs">
-      <Icons.New_status />
-      <span className="w-10 h-[22px] mt-[1px] font-medium inline-flex justify-center items-center px-[7px] bg-slate-100 rounded text-green-main">
-        New
-      </span>
-    </div>
-  ) : (
-    ""
-  );
-};
